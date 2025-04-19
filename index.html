@@ -5,21 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login Keuangan Rumah Tangga</title>
   <style>
-     
-    
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      background: url('./img/LOGIN.jpeg') no-repeat center center/cover;
-      height: 100vh;
+      background: url('https://img.freepik.com/free-vector/couple-managing-finance-together_23-2148539145.jpg') no-repeat center center/cover;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
     }
 
-    /* Overlay agar form terlihat jelas */
+    /* Overlay gelap agar teks lebih jelas */
     body::before {
       content: "";
       position: absolute;
@@ -70,6 +72,7 @@
     button:hover {
       background: #45a049;
     }
+
     @media (max-width: 480px) {
       .login-container {
         padding: 1.5rem;
@@ -98,7 +101,7 @@
 
   <script>
     function loginUser() {
-      // Langsung ke dashboard tanpa validasi
+      // Langsung redirect ke dashboard
       window.location.href = "dashboard.html";
       return false;
     }

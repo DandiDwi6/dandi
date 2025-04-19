@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pengeluaran</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+
+    .navbar {
+      background: #4CAF50;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #f44336;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #ffebee;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar .nav-links {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="brand">💰 Keuangan Keluarga</div>
+    <div class="nav-links">
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="pemasukan.html">➕ Pemasukan</a>
+      <a href="pengeluaran.html">➖ Pengeluaran</a>
+      <!-- <a href="tagihan.html">🔔 Pengingat</a> -->
+      <a href="login.html">🚪 Keluar</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Tambah Pengeluaran</h2>
+    <div class="form-group">
+      <input type="text" id="deskripsi" placeholder="Deskripsi Pengeluaran (contoh: Belanja, Listrik)" />
+    </div>
+    <div class="form-group">
+      <input type="number" id="jumlah" placeholder="Jumlah (Rp)" />
+    </div>
+    <div class="form-group">
+      <input type="date" id="tanggal" />
+    </div>
+    <div class="form-group">
+      <select id="kategori">
+        <option value="">Pilih Kategori</option>
+        <option value="Makanan">Makanan</option>
+        <option value="Transportasi">Transportasi</option>
+        <option value="Listrik/Air">Listrik/Air</option>
+        <option value="Hiburan">Hiburan</option>
+        <option value="Kesehatan">Kesehatan</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
+    </div>
+    <button onclick="tambahPengeluaran()">Tambah</button>
+
+    <table id="tabelPengeluaran">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Deskripsi</th>
+          <th>Kategori</th>
+          <th>Jumlah</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadPengeluaran() {
+      const data = JSON.parse(localStorage.getItem('pengeluaran')) || [];
+      const tbody = document.querySelector('#tabelPengeluaran tbody');
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.tanggal}</td>
+          <td>${item.deskripsi}</td>
+          <td>${item.kategori || 'Lainnya'}</td>
+          <td>Rp ${parseInt(item.jumlah).toLocaleString()}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function tambahPengeluaran() {
+      const deskripsi = document.getElementById('deskripsi').value.trim();
+      const jumlah = document.getElementById('jumlah').value.trim();
+      const tanggal = document.getElementById('tanggal').value;
+      const kategori = document.getElementById('kategori').value;
+
+      if (!deskripsi || !jumlah || !tanggal || !kategori) {
+        alert('Semua kolom harus diisi!');
+        return;
+      }
+
+      const data = JSON.parse(localStorage.getItem('pengeluaran')) || [];
+      data.push({ deskripsi, jumlah, tanggal, kategori });
+      localStorage.setItem('pengeluaran', JSON.stringify(data));
+
+      document.getElementById('deskripsi').value = '';
+      document.getElementById('jumlah').value = '';
+      document.getElementById('tanggal').value = '';
+      document.getElementById('kategori').value = '';
+
+      loadPengeluaran();
+    }
+
+    loadPengeluaran();
+  </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+
+    .navbar {
+      background: #4CAF50;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 250px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .card p {
+      font-size: 1.5rem;
+      margin: 0;
+      color: #333;
+    }
+
+    canvas {
+      margin-top: 2rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar .nav-links {
+        margin-top: 0.5rem;
+      }
+
+      .summary {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="brand">💰 Keuangan Keluarga</div>
+    <div class="nav-links">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="pemasukan.html">➕ Pemasukan</a>
+        <a href="pengeluaran.html">➖ Pengeluaran</a>
+        <!-- <a href="tagihan.html">🔔 Pengingat</a> -->
+        <a href="laporan.html">📊 Laporan</a>
+        <a href="login.html">🚪 Keluar</a>
+      </div>
+      
+  </div>
+
+  <div class="container">
+    <h2>Ringkasan Bulan Ini</h2>
+    <button onclick="resetSemuaData()" style="background: #9e9e9e; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; margin-top: 1rem;">🗑️ Reset Semua Data</button>
+    <div class="summary">
+      <div class="card">
+        <h3>Total Pemasukan</h3>
+        <p id="totalPemasukan">Rp 0</p>
+      </div>
+      <div class="card">
+        <h3>Total Pengeluaran</h3>
+        <p id="totalPengeluaran">Rp 0</p>
+      </div>
+      <div class="card">
+        <h3>Saldo Akhir</h3>
+        <p id="saldo">Rp 0</p>
+      </div>
+    </div>
+
+    <canvas id="pengeluaranChart" height="500" style="max-width: 5000; margin: 0 auto;"></canvas>
+
+  </div>
+
+  <script>
+    function formatRupiah(angka) {
+      return "Rp " + parseInt(angka).toLocaleString("id-ID");
+    }
+  
+    function hitungRingkasan() {
+      const pemasukan = JSON.parse(localStorage.getItem('pemasukan')) || [];
+      const pengeluaran = JSON.parse(localStorage.getItem('pengeluaran')) || [];
+  
+      const totalPemasukan = pemasukan.reduce((acc, item) => acc + parseInt(item.jumlah), 0);
+      const totalPengeluaran = pengeluaran.reduce((acc, item) => acc + parseInt(item.jumlah), 0);
+      const saldo = totalPemasukan - totalPengeluaran;
+    }
+  
+      document.getElementById('totalPemasukan').textContent = formatRupiah(totalPemasukan);
+      document.getElementById('totalPengeluaran').textContent = formatRupiah(totalPengeluaran);
+      document.getElementById('saldo').textContent = formatRupiah(saldo);
+  
+      // Gabungkan kategori dari pemasukan dan pengeluaran
+      const kategoriMap = {};
+  
+      pemasukan.forEach(item => {
+        const kategori = item.kategori || "Lainnya";
+        if (!kategoriMap[kategori]) kategoriMap[kategori] = { masuk: 0, keluar: 0 };
+        kategoriMap[kategori].masuk += parseInt(item.jumlah);
+      });
+  
+      pengeluaran.forEach(item => {
+        const kategori = item.kategori || "Lainnya";
+        if (!kategoriMap[kategori]) kategoriMap[kategori] = { masuk: 0, keluar: 0 };
+        kategoriMap[kategori].keluar += parseInt(item.jumlah);
+      });
+  
+      const labels = Object.keys(kategoriMap);
+      const dataMasuk = labels.map(k => kategoriMap[k].masuk);
+      const dataKeluar = labels.map(k => kategoriMap[k].keluar);
+  
+      // Data Pie Chart: Total pengeluaran per kategori
+const label = Object.keys(kategoriMap);
+const dataPie = labels.map(k => kategoriMap[k].keluar);
+
+new Chart(document.getElementById('pengeluaranChart'), {
+  type: 'doughnut', // atau 'doughnut'
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'Pengeluaran per Kategori',
+      data: dataPie,
+      backgroundColor: [
+        '#f44336', '#ff9800', '#ffeb3b',
+        '#4caf50', '#2196f3', '#9c27b0',
+        '#795548', '#607d8b'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: 'bottom'
+    }
+  }
+}
+
+});
+
+  
+    hitungRingkasan();
+  </script>
+  
+    hitungRingkasan();
+  </script>
+  <script>
+    function formatRupiah(angka) {
+      return "Rp " + parseInt(angka).toLocaleString("id-ID");
+    }
+
+    function hitungRingkasan() {
+      const pemasukan = JSON.parse(localStorage.getItem('pemasukan')) || [];
+      const pengeluaran = JSON.parse(localStorage.getItem('pengeluaran')) || [];
+
+      const totalPemasukan = pemasukan.reduce((acc, item) => acc + parseInt(item.jumlah), 0);
+      const totalPengeluaran = pengeluaran.reduce((acc, item) => acc + parseInt(item.jumlah), 0);
+      const saldo = totalPemasukan - totalPengeluaran;
+
+      document.getElementById('totalPemasukan').textContent = formatRupiah(totalPemasukan);
+      document.getElementById('totalPengeluaran').textContent = formatRupiah(totalPengeluaran);
+      document.getElementById('saldo').textContent = formatRupiah(saldo);
+
+      // Buat data grafik dari kategori pengeluaran
+      const kategoriMap = {};
+      pengeluaran.forEach(item => {
+        const kategori = item.kategori || "Lainnya";
+        kategoriMap[kategori] = (kategoriMap[kategori] || 0) + parseInt(item.jumlah);
+      });
+
+      const labels = Object.keys(kategoriMap);
+      const data = Object.values(kategoriMap);
+
+      new Chart(document.getElementById('pengeluaranChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Pengeluaran per Kategori',
+            data: data,
+            backgroundColor: '#f44336',
+            borderRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function resetSemuaData() {
+      if (confirm("Yakin ingin menghapus semua data pemasukan dan pengeluaran?")) {
+        localStorage.removeItem('pemasukan');
+        localStorage.removeItem('pengeluaran');
+        alert("Data berhasil direset.");
+        location.reload();
+      }
+    }
+
+    hitungRingkasan();
+  </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laporan Bulanan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+
+    .navbar {
+      background: #4CAF50;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .filter {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    select {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .summary {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .summary div {
+      flex: 1;
+      min-width: 150px;
+      background: #e8f5e9;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    th {
+      background: #f0f0f0;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar .nav-links {
+        margin-top: 0.5rem;
+      }
+
+      .summary {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="brand">📊 Laporan Bulanan</div>
+    <div class="nav-links">
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="pemasukan.html">➕ Pemasukan</a>
+      <a href="pengeluaran.html">➖ Pengeluaran</a>
+      <a href="tagihan.html">🔔 Pengingat</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Pilih Bulan & Tahun</h2>
+    <div class="filter">
+      <select id="bulanSelect">
+        <option value="0">Januari</option>
+        <option value="1">Februari</option>
+        <option value="2">Maret</option>
+        <option value="3">April</option>
+        <option value="4">Mei</option>
+        <option value="5">Juni</option>
+        <option value="6">Juli</option>
+        <option value="7">Agustus</option>
+        <option value="8">September</option>
+        <option value="9">Oktober</option>
+        <option value="10">November</option>
+        <option value="11">Desember</option>
+      </select>
+      <select id="tahunSelect"></select>
+      <button onclick="tampilkanLaporan()">🔍 Tampilkan</button>
+    </div>
+
+    <div class="summary">
+      <div>
+        <h4>Pemasukan</h4>
+        <strong id="totalMasuk">Rp 0</strong>
+      </div>
+      <div>
+        <h4>Pengeluaran</h4>
+        <strong id="totalKeluar">Rp 0</strong>
+      </div>
+      <div>
+        <h4>Saldo</h4>
+        <strong id="totalSaldo">Rp 0</strong>
+      </div>
+    </div>
+
+    <table id="tabelLaporan">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Jenis</th>
+          <th>Kategori</th>
+          <th>Jumlah</th>
+          <th>Keterangan</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    function formatRupiah(angka) {
+      return "Rp " + parseInt(angka).toLocaleString("id-ID");
+    }
+
+    // Isi dropdown tahun otomatis
+    const tahunSelect = document.getElementById("tahunSelect");
+    const tahunSekarang = new Date().getFullYear();
+    for (let i = tahunSekarang; i >= tahunSekarang - 10; i--) {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = i;
+      tahunSelect.appendChild(opt);
+    }
+
+    function tampilkanLaporan() {
+      const bulan = parseInt(document.getElementById("bulanSelect").value);
+      const tahun = parseInt(document.getElementById("tahunSelect").value);
+
+      const pemasukan = JSON.parse(localStorage.getItem("pemasukan")) || [];
+      const pengeluaran = JSON.parse(localStorage.getItem("pengeluaran")) || [];
+
+      const semuaData = [...pemasukan.map(p => ({...p, jenis: "Pemasukan"})), ...pengeluaran.map(p => ({...p, jenis: "Pengeluaran"}))];
+
+      const filterData = semuaData.filter(item => {
+        const tanggal = new Date(item.tanggal);
+        return tanggal.getMonth() === bulan && tanggal.getFullYear() === tahun;
+      });
+
+      let totalMasuk = 0, totalKeluar = 0;
+      const tbody = document.querySelector("#tabelLaporan tbody");
+      tbody.innerHTML = "";
+
+      filterData.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.tanggal}</td>
+          <td>${item.jenis}</td>
+          <td>${item.kategori || '-'}</td>
+          <td>${formatRupiah(item.jumlah)}</td>
+          <td>${item.keterangan || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+
+        if (item.jenis === "Pemasukan") {
+          totalMasuk += parseInt(item.jumlah);
+        } else {
+          totalKeluar += parseInt(item.jumlah);
+        }
+      });
+
+      document.getElementById("totalMasuk").textContent = formatRupiah(totalMasuk);
+      document.getElementById("totalKeluar").textContent = formatRupiah(totalKeluar);
+      document.getElementById("totalSaldo").textContent = formatRupiah(totalMasuk - totalKeluar);
+    }
+
+    // Default tampilkan bulan sekarang saat halaman dibuka
+    document.getElementById("bulanSelect").value = new Date().getMonth();
+    document.getElementById("tahunSelect").value = tahunSekarang;
+    tampilkanLaporan();
+  </script>
+</body>
+</html>

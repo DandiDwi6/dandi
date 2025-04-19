@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pemasukan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+
+    .navbar {
+      background: #4CAF50;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #e0f2f1;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar .nav-links {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="brand">💰 Keuangan Keluarga</div>
+    <div class="nav-links">
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="pemasukan.html">➕ Pemasukan</a>
+      <a href="pengeluaran.html">➖ Pengeluaran</a>
+      <!-- <a href="tagihan.html">🔔 Pengingat</a> -->
+      <a href="login.html">🚪 Keluar</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Tambah Pemasukan</h2>
+    <div class="form-group">
+      <input type="text" id="sumber" placeholder="Sumber Pemasukan (contoh: Gaji, Bonus)" />
+    </div>
+    <div class="form-group">
+      <input type="number" id="jumlah" placeholder="Jumlah (Rp)" />
+    </div>
+    <div class="form-group">
+      <input type="date" id="tanggal" />
+    </div>
+    <button onclick="tambahPemasukan()">Tambah</button>
+
+    <table id="tabelPemasukan">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Sumber</th>
+          <th>Jumlah</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadPemasukan() {
+      const data = JSON.parse(localStorage.getItem('pemasukan')) || [];
+      const tbody = document.querySelector('#tabelPemasukan tbody');
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.tanggal}</td>
+          <td>${item.sumber}</td>
+          <td>Rp ${parseInt(item.jumlah).toLocaleString()}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function tambahPemasukan() {
+      const sumber = document.getElementById('sumber').value.trim();
+      const jumlah = document.getElementById('jumlah').value.trim();
+      const tanggal = document.getElementById('tanggal').value;
+
+      if (!sumber || !jumlah || !tanggal) {
+        alert('Semua kolom harus diisi!');
+        return;
+      }
+
+      const data = JSON.parse(localStorage.getItem('pemasukan')) || [];
+      data.push({ sumber, jumlah, tanggal });
+      localStorage.setItem('pemasukan', JSON.stringify(data));
+
+      document.getElementById('sumber').value = '';
+      document.getElementById('jumlah').value = '';
+      document.getElementById('tanggal').value = '';
+
+      loadPemasukan();
+    }
+
+    // Tampilkan data saat halaman dibuka
+    loadPemasukan();
+  </script>
+</body>
+</html>

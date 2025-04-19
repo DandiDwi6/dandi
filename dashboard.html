@@ -193,12 +193,8 @@ new Chart(document.getElementById('pengeluaranChart'), {
 
 });
 
-  
-    hitungRingkasan();
   </script>
-  
-    hitungRingkasan();
-  </script>
+
   <script>
     function formatRupiah(angka) {
       return "Rp " + parseInt(angka).toLocaleString("id-ID");
@@ -261,6 +257,12 @@ new Chart(document.getElementById('pengeluaranChart'), {
     }
 
     hitungRingkasan();
+  </script>
+  <script>
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
   </script>
 </body>
 </html>

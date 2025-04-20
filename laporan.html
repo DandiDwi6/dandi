@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laporan Bulanan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Keuangan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -15,199 +14,178 @@
     }
 
     body {
+      background-color: #f0f4ff;
+      color: #333;
+      padding-bottom: 60px;
+    }
+
+    .header {
       display: flex;
-      background-color: #eaf1fa;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .menu-btn {
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
     }
 
     .sidebar {
-      width: 220px;
-      background-color: #2979ff;
-      color: white;
-      height: 100vh;
-      padding: 30px 20px;
       position: fixed;
       top: 0;
-      left: 0;
+      left: -100%;
+      width: 70%;
+      height: 100%;
+      background-color: #1e90ff;
+      color: white;
+      padding: 20px;
+      transition: left 0.3s ease;
       z-index: 1000;
-      transition: transform 0.3s ease;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .sidebar button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      position: absolute;
+      top: 15px;
+      right: 20px;
     }
 
     .sidebar h2 {
-      font-size: 20px;
-      margin-bottom: 40px;
+      margin-top: 60px;
+      margin-bottom: 20px;
     }
 
     .sidebar a {
       display: block;
       color: white;
       text-decoration: none;
-      margin-bottom: 20px;
-      padding: 10px 15px;
-      border-radius: 12px;
-      transition: background 0.3s;
+      padding: 10px 0;
+      font-size: 18px;
     }
 
-    .sidebar a:hover {
-      background-color: rgba(255,255,255,0.2);
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(2px);
+      background-color: rgba(0, 0, 0, 0.2);
+      z-index: 900;
+      display: none;
     }
 
-    .main-content {
-      margin-left: 240px;
-      padding: 40px;
-      width: calc(100% - 240px);
+    .overlay.show {
+      display: block;
     }
 
-    .flex-container {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
     }
 
     .card {
       background: white;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      flex: 1;
-      min-width: 250px;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .table-container {
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ccc;
-    }
-
-    .extra-widgets {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 40px;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-    }
-
-    .progress-bar {
-      background: #ddd;
-      border-radius: 20px;
+      background: white;
+      border-radius: 12px;
       overflow: hidden;
-      height: 20px;
       margin-top: 10px;
     }
 
-    .progress-bar-fill {
-      background: #4caf50;
-      height: 100%;
-      width: 59%;
+    thead {
+      background-color: #f5f5f5;
     }
 
-    /* Tombol menu & sidebar responsif */
-    .menu-btn {
-      display: none;
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: #2979ff;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 10px;
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      min-width: 100px;
       font-size: 14px;
-      z-index: 1100;
-      cursor: pointer;
     }
 
-    .close-btn {
-      display: none;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 16px;
-      background: #fff;
-      color: #2979ff;
-      border: none;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      line-height: 28px;
-      text-align: center;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      cursor: pointer;
-      z-index: 1101;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.active {
-        transform: translateX(0);
-      }
-
-      .main-content {
-        margin-left: 0;
-        width: 100%;
-        padding: 80px 20px 20px 20px;
-      }
-
-      .menu-btn {
-        display: block;
-      }
-
-      .close-btn {
-        display: block;
-      }
+    canvas {
+      max-width: 100%;
     }
   </style>
 </head>
 <body>
-  <button class="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
 
-  <div class="sidebar" id="sidebar">
-    <button class="close-btn" onclick="toggleSidebar()">✖</button>
-    <h2>💰 Keuangan</h2>
-    <a href="#">🏠 Dashboard</a>
-    <a href="#">➕ Pemasukan</a>
-    <a href="#">➖ Pengeluaran</a>
+  <!-- Header -->
+  <div class="header">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <h2>Laporan Keuangan</h2>
   </div>
 
-  <div class="main-content">
-    <h1>Laporan Bulanan</h1>
-    <div style="margin: 20px 0;">
-      <label for="bulan">Pilih Bulan:</label>
-      <select id="bulan">
-        <option>April 2025</option>
-      </select>
-      <button style="padding: 5px 15px; background-color: #2979ff; color: white; border: none; border-radius: 8px;">🔍 Tampilkan</button>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <button onclick="toggleSidebar()">×</button>
+    <h2>📘 Keuangan</h2>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="pemasukan.html">➕ Pemasukan</a>
+    <a href="pengeluaran.html">➖ Pengeluaran</a>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Konten -->
+  <div class="container">
+
+    <div class="card">
+      <h3>Pemasukan</h3>
+      <p>Rp 3.000.000</p>
     </div>
 
-    <div class="flex-container">
-      <div class="card">
-        <h3>Pemasukan</h3>
-        <p>Rp 3.000.000</p>
-      </div>
-      <div class="card">
-        <h3>Pengeluaran</h3>
-        <p>Rp 25.000</p>
-      </div>
-      <div class="card">
-        <h3>Saldo</h3>
-        <p>Rp 2.975.000</p>
-      </div>
+    <div class="card">
+      <h3>Pengeluaran</h3>
+      <p>Rp 25.000</p>
     </div>
 
-    <div class="card" style="margin-top: 30px;">
+    <div class="card">
+      <h3>Saldo</h3>
+      <p>Rp 2.975.000</p>
+    </div>
+
+    <div class="card table-container">
       <h3>Detail Transaksi</h3>
       <table>
         <thead>
@@ -235,50 +213,24 @@
       </table>
     </div>
 
-    <div class="extra-widgets">
-      <div class="card">
-        <h3>📊 Grafik Pengeluaran</h3>
-        <canvas id="chartKategori"></canvas>
-      </div>
-      <div class="card">
-        <h3>💡 Tips Hemat</h3>
-        <ul>
-          <li>Bawa bekal makan siang.</li>
-          <li>Kurangi jajan kopi harian.</li>
-          <li>Gunakan transportasi umum.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>🎯 Target Tabungan</h3>
-        <p>Rp 5.000.000</p>
-        <p>Terkumpul: Rp 2.975.000</p>
-        <div class="progress-bar">
-          <div class="progress-bar-fill"></div>
-        </div>
-      </div>
+    <div class="card">
+      <h3>📊 Grafik Pengeluaran</h3>
+      <canvas id="pengeluaranChart"></canvas>
     </div>
+
   </div>
 
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("active");
-    }
-
-    const ctx = document.getElementById('chartKategori').getContext('2d');
-    new Chart(ctx, {
+    const ctx = document.getElementById('pengeluaranChart').getContext('2d');
+    const pengeluaranChart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Makanan', 'Transport', 'Hiburan', 'Lainnya'],
+        labels: ['Makanan', 'Transportasi', 'Hiburan'],
         datasets: [{
-          label: 'Pengeluaran',
-          data: [40, 25, 15, 20],
-          backgroundColor: [
-            '#4fc3f7',
-            '#9575cd',
-            '#ff8a65',
-            '#aed581'
-          ],
-          borderWidth: 1
+          data: [25000, 0, 0],
+          backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
         }]
       },
       options: {
@@ -291,5 +243,16 @@
       }
     });
   </script>
+
+  <!-- Sidebar Script -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('show');
+    }
+  </script>
+
 </body>
 </html>

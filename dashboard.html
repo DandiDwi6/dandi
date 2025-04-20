@@ -193,7 +193,7 @@
   <script>
     if (!localStorage.getItem("user")) {
       alert("Silakan login terlebih dahulu.");
-      window.location.href = "login.html";
+      window.location.href = "index.html";
     }
 
     function formatRupiah(angka) {
@@ -262,7 +262,7 @@
 
     function logout() {
       localStorage.removeItem("user");
-      window.location.href = "login.html";
+      window.location.href = "index.html";
     }
 
     hitungRingkasan();

@@ -72,6 +72,9 @@ tbody tr:hover {
     display: block;
   }
 }
+.hidden {
+  display: none !important;
+}
 
   </style>
 </head>
@@ -151,9 +154,13 @@ tbody tr:hover {
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("active");
-    }
+   function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const hamburger = document.querySelector(".menu-toggle");
+  sidebar.classList.toggle("active");
+  hamburger.classList.toggle("hidden"); // Tambahkan ini
+}
+
 
     function logout() {
       localStorage.removeItem('isLoggedIn');

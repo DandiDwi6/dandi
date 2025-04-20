@@ -52,6 +52,13 @@
       .hamburger { display: block; }
       .main-content { margin-left: 0; padding-top: 60px; }
     }
+    tbody tr {
+  transition: background-color 0.2s ease;
+}
+tbody tr:hover {
+  background-color: #f0f9ff;
+}
+
   </style>
 </head>
 <body>
@@ -135,7 +142,7 @@
     function logout() {
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('username');
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
     }
 
     // Menampilkan data dari localStorage
@@ -182,11 +189,16 @@
         }]
       },
       options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom' }
-        }
-      }
+  responsive: true,
+  animation: {
+    animateRotate: true,
+    duration: 1000
+  },
+  plugins: {
+    legend: { position: 'bottom' }
+  }
+}
+
     });
   </script>
 </body>

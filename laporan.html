@@ -13,17 +13,30 @@
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
     }
-
     body {
       display: flex;
+      flex-direction: column;
       background-color: #eaf1fa;
+      min-height: 100vh;
+    }
+
+    .menu-btn {
+      display: none;
+      background: #2979ff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 18px;
+      margin: 15px;
+      border-radius: 8px;
+      z-index: 1100;
     }
 
     .sidebar {
       width: 220px;
       background-color: #2979ff;
       color: white;
-      height: 100vh;
+      min-height: 100%;
       padding: 30px 20px;
       position: fixed;
       top: 0;
@@ -55,16 +68,6 @@
       margin-left: 240px;
       padding: 40px;
       width: calc(100% - 240px);
-    }
-
-    .menu-btn {
-      display: none;
-      margin-bottom: 20px;
-      background: #2979ff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 12px;
     }
 
     .flex-container {
@@ -120,14 +123,31 @@
       width: 59%;
     }
 
-    /* RESPONSIF MOBILE */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      z-index: 900;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
     @media (max-width: 768px) {
+      .menu-btn {
+        display: block;
+      }
+
       .sidebar {
         position: absolute;
         left: -100%;
-        height: 100%;
         top: 0;
-        width: 220px;
+        height: 100%;
       }
 
       .sidebar.active {
@@ -139,20 +159,12 @@
         width: 100%;
         padding: 20px;
       }
-
-      .menu-btn {
-        display: block;
-      }
-
-      .flex-container,
-      .extra-widgets {
-        flex-direction: column;
-        display: flex;
-      }
     }
   </style>
 </head>
 <body>
+  <button class="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
+
   <div class="sidebar" id="sidebar">
     <h2>💰 Keuangan</h2>
     <a href="#">🏠 Dashboard</a>
@@ -160,8 +172,9 @@
     <a href="#">➖ Pengeluaran</a>
   </div>
 
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
   <div class="main-content">
-    <button class="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
     <h1>Laporan Bulanan</h1>
     <div style="margin: 20px 0;">
       <label for="bulan">Pilih Bulan:</label>
@@ -240,7 +253,18 @@
 
   <script>
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('active');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const menuBtn = document.querySelector('.menu-btn');
+
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('show');
+
+      if (sidebar.classList.contains('active')) {
+        menuBtn.textContent = '✖ Tutup';
+      } else {
+        menuBtn.textContent = '☰ Menu';
+      }
     }
 
     const ctx = document.getElementById('chartKategori').getContext('2d');
@@ -251,7 +275,12 @@
         datasets: [{
           label: 'Pengeluaran',
           data: [40, 25, 15, 20],
-          backgroundColor: ['#4fc3f7', '#9575cd', '#ff8a65', '#aed581'],
+          backgroundColor: [
+            '#4fc3f7',
+            '#9575cd',
+            '#ff8a65',
+            '#aed581'
+          ],
           borderWidth: 1
         }]
       },

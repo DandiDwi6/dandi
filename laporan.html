@@ -2,211 +2,192 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Laporan Keuangan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    body {
-      display: flex;
-      background-color: #f0f4ff;
-      color: #333;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { display: flex; min-height: 100vh; background-color: #e9f1ff; }
     .sidebar {
-      background-color: #3b82f6;
-      color: white;
-      height: 100vh;
-      width: 240px;
-      padding: 2rem 1.5rem;
-      position: fixed;
+      width: 250px; background-color: #3b82f6; padding: 20px; color: white;
+      position: fixed; height: 100%; transition: transform 0.3s ease-in-out; z-index: 1000;
     }
-
-    .sidebar h2 {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
+    .sidebar h2 { margin-bottom: 30px; font-size: 24px; }
     .sidebar a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      margin: 1rem 0;
-      font-size: 1rem;
-      font-weight: 500;
+      display: flex; align-items: center; color: white; text-decoration: none;
+      padding: 10px 0; font-size: 16px;
     }
-
-    .sidebar a:hover {
-      text-decoration: underline;
+    .sidebar a i { margin-right: 10px; }
+    .main-content {
+      margin-left: 250px; padding: 20px; width: 100%;
     }
-
-    .main {
-      margin-left: 240px;
-      padding: 2rem;
-      flex: 1;
+    header { text-align: center; margin-bottom: 30px; }
+    .card-container {
+      display: flex; justify-content: space-between; gap: 20px;
+      flex-wrap: wrap; margin-bottom: 30px;
     }
-
-    .section-title {
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    .cards {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-      justify-content: center;
-    }
-
     .card {
-      background-color: white;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      flex: 1;
-      min-width: 220px;
-      text-align: center;
+      flex: 1; background: white; padding: 20px; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); min-width: 220px;
     }
-
-    .card h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
+    .card h3 { margin-bottom: 10px; font-weight: 600; }
+    .card ul { padding-left: 16px; margin-top: 10px; }
+    .card p { margin-top: 8px; }
+    .table-container {
+      background: white; padding: 20px; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 30px; overflow-x: auto;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      border-radius: 1rem;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      margin-bottom: 2rem;
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
+    th { background-color: #eff6ff; font-weight: 600; }
+    .hamburger {
+      display: none; position: absolute; top: 20px; left: 20px;
+      font-size: 24px; color: #333; cursor: pointer; z-index: 1100;
     }
-
-    th, td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-    }
-
-    th {
-      background-color: #e0ecff;
-    }
-
-    .chart-container {
-      background-color: white;
-      padding: 1rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    canvas { max-width: 100%; height: auto; }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.active { transform: translateX(0); }
+      .hamburger { display: block; }
+      .main-content { margin-left: 0; padding-top: 60px; }
     }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>📊 Keuangan</h2>
-    <a href="dashboard.html">🏠 Dashboard</a>
-    <a href="pemasukan.html">➕ Pemasukan</a>
-    <a href="pengeluaran.html">➖ Pengeluaran</a>
-    <a href="laporan.html">📊 Laporan</a>
-    <a href="#" onclick="logout()">🚪 Keluar</a>
+
+  <div class="hamburger" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
   </div>
 
-  <div class="main">
-    <h1 class="section-title">Laporan Keuangan</h1>
+  <div class="sidebar" id="sidebar">
+    <h2><i class="fas fa-chart-bar"></i> Keuangan</h2>
+    <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="pemasukan.html"><i class="fas fa-plus"></i> Pemasukan</a>
+    <a href="pengeluaran.html"><i class="fas fa-minus"></i> Pengeluaran</a>
+    <a href="laporan.html"><i class="fas fa-chart-pie"></i> Laporan</a>
+    <a href="#" onclick="logout()"><i class="fas fa-door-open"></i> Keluar</a>
+  </div>
 
-    <div class="cards">
+  <div class="main-content">
+    <header>
+      <h1>Laporan Keuangan</h1>
+    </header>
+
+    <div class="card-container">
       <div class="card">
-        <h3>📥 Pemasukan</h3>
+        <h3><i class="fas fa-arrow-down"></i> Pemasukan</h3>
         <p id="totalPemasukan">Rp 0</p>
       </div>
       <div class="card">
-        <h3>📤 Pengeluaran</h3>
+        <h3><i class="fas fa-arrow-up"></i> Pengeluaran</h3>
         <p id="totalPengeluaran">Rp 0</p>
       </div>
       <div class="card">
-        <h3>💰 Saldo</h3>
+        <h3><i class="fas fa-wallet"></i> Saldo</h3>
         <p id="saldo">Rp 0</p>
       </div>
     </div>
 
-    <h2 class="section-title" style="text-align:left;">Detail Transaksi</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Kategori</th>
-          <th>Jumlah</th>
-          <th>Keterangan</th>
-        </tr>
-      </thead>
-      <tbody id="transaksiBody"></tbody>
-    </table>
+    <div class="table-container">
+      <h3>Detail Transaksi</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Kategori</th>
+            <th>Jumlah</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody id="transaksiTable">
+          <!-- Diisi JS -->
+        </tbody>
+      </table>
+    </div>
 
-    <div class="chart-container">
-      <h2 class="section-title" style="text-align:left;">Grafik Pengeluaran</h2>
-      <canvas id="pengeluaranChart"></canvas>
+    <div class="card-container">
+      <div class="card">
+        <h3><i class="fas fa-chart-pie"></i> Grafik Pengeluaran</h3>
+        <canvas id="pengeluaranChart" style="max-height:200px;"></canvas>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-bullseye"></i> Target Tabungan</h3>
+        <p>Rp 10.000.000</p>
+        <p style="font-size: 14px; color: gray;">Target akhir tahun</p>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-bell"></i> Reminder</h3>
+        <ul style="font-size: 14px; color: gray;">
+          <li>Bayar listrik - 25 Apr</li>
+          <li>Tagihan air - 28 Apr</li>
+        </ul>
+      </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Dummy data (bisa diganti ambil dari localStorage jika sudah ada)
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    function logout() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('username');
+      window.location.href = 'login.html';
+    }
+
+    // Menampilkan data dari localStorage
     const pemasukan = JSON.parse(localStorage.getItem('pemasukan')) || [];
     const pengeluaran = JSON.parse(localStorage.getItem('pengeluaran')) || [];
 
-    let totalMasuk = pemasukan.reduce((acc, item) => acc + parseFloat(item.jumlah), 0);
-    let totalKeluar = pengeluaran.reduce((acc, item) => acc + parseFloat(item.jumlah), 0);
-    let saldo = totalMasuk - totalKeluar;
+    const totalPemasukan = pemasukan.reduce((acc, item) => acc + parseInt(item.jumlah), 0);
+    const totalPengeluaran = pengeluaran.reduce((acc, item) => acc + parseInt(item.jumlah), 0);
+    const saldo = totalPemasukan - totalPengeluaran;
 
-    document.getElementById('totalPemasukan').innerText = `Rp ${totalMasuk.toLocaleString('id-ID')}`;
-    document.getElementById('totalPengeluaran').innerText = `Rp ${totalKeluar.toLocaleString('id-ID')}`;
-    document.getElementById('saldo').innerText = `Rp ${saldo.toLocaleString('id-ID')}`;
+    document.getElementById('totalPemasukan').textContent = 'Rp ' + totalPemasukan.toLocaleString();
+    document.getElementById('totalPengeluaran').textContent = 'Rp ' + totalPengeluaran.toLocaleString();
+    document.getElementById('saldo').textContent = 'Rp ' + saldo.toLocaleString();
 
-    const transaksiBody = document.getElementById('transaksiBody');
-    pemasukan.forEach(item => {
-      transaksiBody.innerHTML += `<tr><td>${item.tanggal}</td><td>-</td><td>Rp ${parseFloat(item.jumlah).toLocaleString('id-ID')}</td><td>-</td></tr>`;
+    const tableBody = document.getElementById('transaksiTable');
+
+    const allTransaksi = [...pemasukan.map(p => ({...p, jenis: 'Pemasukan'})), ...pengeluaran.map(p => ({...p, jenis: 'Pengeluaran'}))];
+    allTransaksi.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+    allTransaksi.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.tanggal}</td>
+        <td>${item.kategori}</td>
+        <td>Rp ${parseInt(item.jumlah).toLocaleString()}</td>
+        <td>${item.keterangan || '-'}</td>
+      `;
+      tableBody.appendChild(row);
     });
-    pengeluaran.forEach(item => {
-      transaksiBody.innerHTML += `<tr><td>${item.tanggal}</td><td>${item.kategori}</td><td>Rp ${parseFloat(item.jumlah).toLocaleString('id-ID')}</td><td>${item.keterangan}</td></tr>`;
-    });
 
-    const ctx = document.getElementById('pengeluaranChart').getContext('2d');
-    const dataKategori = {};
+    // Pie chart pengeluaran
+    const kategoriMap = {};
     pengeluaran.forEach(p => {
-      dataKategori[p.kategori] = (dataKategori[p.kategori] || 0) + parseFloat(p.jumlah);
+      kategoriMap[p.kategori] = (kategoriMap[p.kategori] || 0) + parseInt(p.jumlah);
     });
-    new Chart(ctx, {
-      type: 'bar',
+
+    const chart = new Chart(document.getElementById('pengeluaranChart').getContext('2d'), {
+      type: 'doughnut',
       data: {
-        labels: Object.keys(dataKategori),
+        labels: Object.keys(kategoriMap),
         datasets: [{
-          label: 'Pengeluaran per Kategori',
-          data: Object.values(dataKategori),
-          backgroundColor: '#3b82f6'
+          data: Object.values(kategoriMap),
+          backgroundColor: ['#3b82f6', '#facc15', '#ef4444', '#10b981', '#8b5cf6']
         }]
       },
       options: {
         responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+        plugins: {
+          legend: { position: 'bottom' }
         }
       }
     });
-
-    function logout() {
-      localStorage.removeItem('isLoggedIn');
-      window.location.href = 'login.html';
-    }
   </script>
 </body>
 </html>

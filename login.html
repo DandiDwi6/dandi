@@ -13,7 +13,7 @@
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      background: url('https://img.freepik.com/free-vector/couple-managing-finance-together_23-2148539145.jpg') no-repeat center center/cover;
+      background: url('./Asset/img/LOGIN.jpeg') no-repeat center center/cover;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -100,11 +100,19 @@
   </div>
 
   <script>
-    function loginUser() {
-      // Langsung redirect ke dashboard
-      window.location.href = "dashboard.html";
-      return false;
-    }
+   function loginUser() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  // Simpan user ke localStorage
+  localStorage.setItem("user", JSON.stringify({ username }));
+
+  // Arahkan ke dashboard
+  console.log("User tersimpan:", localStorage.getItem("user")); // debug
+  window.location.href = "dashboard.html";
+  return false;
+}
+
   </script>
 </body>
 </html>

@@ -13,55 +13,28 @@
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
     }
-    body {
-      background-color: #eaf1fa;
-    }
 
-    .menu-btn {
-      display: none;
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      background-color: #2979ff;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      z-index: 1101;
-      cursor: pointer;
+    body {
+      display: flex;
+      background-color: #eaf1fa;
     }
 
     .sidebar {
       width: 220px;
       background-color: #2979ff;
       color: white;
-      min-height: 100%;
-      height: auto;
+      height: 100vh;
       padding: 30px 20px;
       position: fixed;
       top: 0;
       left: 0;
       z-index: 1000;
-      transition: left 0.3s ease;
-    }
-
-    .close-btn {
-      display: none;
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 20px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      z-index: 1101;
+      transition: transform 0.3s ease;
     }
 
     .sidebar h2 {
       font-size: 20px;
       margin-bottom: 40px;
-      margin-top: 30px;
     }
 
     .sidebar a {
@@ -137,29 +110,63 @@
       width: 59%;
     }
 
-    @media (max-width: 768px) {
-      .menu-btn {
-        display: block;
-      }
+    /* Tombol menu & sidebar responsif */
+    .menu-btn {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #2979ff;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      z-index: 1100;
+      cursor: pointer;
+    }
 
+    .close-btn {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 16px;
+      background: #fff;
+      color: #2979ff;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      line-height: 28px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      z-index: 1101;
+    }
+
+    @media (max-width: 768px) {
       .sidebar {
-        left: -250px;
-        height: 100%;
-        min-height: 100vh;
+        transform: translateX(-100%);
       }
 
       .sidebar.active {
-        left: 0;
-      }
-
-      .close-btn {
-        display: block;
+        transform: translateX(0);
       }
 
       .main-content {
         margin-left: 0;
         width: 100%;
-        padding: 20px;
+        padding: 80px 20px 20px 20px;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .close-btn {
+        display: block;
       }
     }
   </style>

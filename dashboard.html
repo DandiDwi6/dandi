@@ -7,118 +7,104 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-   body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  background: linear-gradient(135deg, #e3f2fd, #ffffff);
-  color: #333;
-}
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+      color: #333;
+      display: flex;
+    }
 
-.navbar {
-  background: #4a90e2;
-  color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-    .navbar .brand {
-      font-size: 1.4rem;
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #4a90e2;
+      color: white;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+      transition: transform 0.3s ease;
+    }
+    .sidebar h2 {
+      margin: 0 0 1.5rem;
+      font-size: 1.3rem;
       font-weight: 600;
     }
-
-    .navbar .nav-links a {
+    .sidebar a {
       color: white;
       text-decoration: none;
-      margin-left: 1.5rem;
+      margin: 0.75rem 0;
+      display: block;
       font-size: 0.95rem;
     }
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      z-index: 999;
+    }
 
+    .content {
+      margin-left: 240px;
+      padding: 2rem 1rem;
+      width: 100%;
+    }
     .header {
-  padding: 2rem;
-  background: url('./Asset/img/1346850.png');
-  background-size: cover;
-  text-align: center;
-  color: #2c3e50;
-}
-
+      text-align: center;
+      margin-bottom: 2rem;
+    }
     .header h2 {
       margin: 0;
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #ffffff;
-      text-shadow:
-        -1px -1px 0 #000000,
-         1px -1px 0 #000000,
-        -1px  1px 0 #000000,
-         1px  1px 0 #000000;
-    }
-
-    .header p {
-      margin-top: 0.5rem;
-      color: #555;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      font-size: 2rem;
+      color: #2c3e50;
     }
 
     .summary {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
     }
-
     .card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px);
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  text-align: center;
-  transition: transform 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(6px);
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
     .card h3 {
       font-size: 1rem;
       color: #666;
       margin-bottom: 0.5rem;
     }
-
     .card p {
       font-size: 1.5rem;
       font-weight: bold;
-      color: #333;
     }
 
     .chart-section {
+      margin-top: 2rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
-      margin-top: 2rem;
     }
-
-    .chart-container {
-      background: white;
+    .chart-container, .kategori-ringkasan {
+      background: rgba(255,255,255,0.9);
       padding: 1rem;
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-    .kategori-ringkasan {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(4px);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .reset-btn {
@@ -127,17 +113,25 @@
       border: none;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
-      margin-top: 2rem;
-      cursor: pointer;
+      margin: 2rem auto 0;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
     }
-    .reset-btn:hover {
-  background: #d32f2f;
-}
 
+    /* Responsive */
     @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .content {
+        margin-left: 0;
+        padding-top: 4rem;
+      }
       .chart-section {
         grid-template-columns: 1fr;
       }
@@ -145,23 +139,22 @@
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="brand">👨‍👩‍👧‍👦 Keuangan Keluarga</div>
-    <div class="nav-links">
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="pemasukan.html">➕ Pemasukan</a>
-      <a href="pengeluaran.html">➖ Pengeluaran</a>
-      <a href="laporan.html">📊 Laporan</a>
-      <a href="index.html">🚪 Keluar</a>
+  <button class="menu-toggle" onclick="toggleSidebar()">☰ Menu</button>
+  <div class="sidebar" id="sidebar">
+    <h2>👨‍👩‍👧‍👦 Keuangan</h2>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="pemasukan.html">➕ Pemasukan</a>
+    <a href="pengeluaran.html">➖ Pengeluaran</a>
+    <a href="laporan.html">📊 Laporan</a>
+    <a href="index.html">🚪 Keluar</a>
+  </div>
+
+  <div class="content">
+    <div class="header">
+      <h2>Selamat Datang di Dashboard</h2>
+      <p>Kelola keuangan keluarga dengan bijak 💖</p>
     </div>
-  </div>
 
-  <div class="header">
-    <h2>Selamat Datang di Dashboard</h2>
-    <h2>Kelola keuangan keluarga dengan bijak 💖</p>
-  </div>
-
-  <div class="container">
     <div class="summary">
       <div class="card">
         <h3>Total Pemasukan</h3>
@@ -194,6 +187,10 @@
     if (!localStorage.getItem("user")) {
       alert("Silakan login terlebih dahulu.");
       window.location.href = "index.html";
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
     }
 
     function formatRupiah(angka) {
@@ -236,9 +233,7 @@
           datasets: [{
             label: 'Pengeluaran per Kategori',
             data: data,
-            backgroundColor: [
-              '#f44336', '#ff9800', '#4caf50', '#2196f3', '#9c27b0', '#607d8b'
-            ],
+            backgroundColor: ['#f44336', '#ff9800', '#4caf50', '#2196f3', '#9c27b0', '#607d8b'],
             borderWidth: 1
           }]
         },
@@ -258,11 +253,6 @@
         alert("Data berhasil direset.");
         location.reload();
       }
-    }
-
-    function logout() {
-      localStorage.removeItem("user");
-      window.location.href = "index.html";
     }
 
     hitungRingkasan();

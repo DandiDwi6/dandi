@@ -7,73 +7,85 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #e3f2fd, #ffffff);
       color: #333;
-    }
-
-    .navbar {
-      background: #4a90e2;
-      color: white;
-      padding: 1rem 2rem;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .navbar .brand {
-      font-weight: 600;
+    .sidebar {
+      width: 220px;
+      background-color: #4a90e2;
+      color: white;
+      padding: 1rem;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
       font-size: 1.4rem;
+      margin-bottom: 2rem;
     }
 
-    .navbar .nav-links a {
+    .sidebar a {
       color: white;
       text-decoration: none;
-      margin-left: 1.5rem;
-      font-size: 0.95rem;
+      margin: 0.5rem 0;
+      display: block;
+      font-weight: 500;
+    }
+
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 2rem;
+      flex: 1;
     }
 
     .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 2rem;
       background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(6px);
       border-radius: 12px;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     h2 {
       text-align: center;
       color: #2c3e50;
-      margin-bottom: 1.5rem;
     }
 
     .filter {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1.5rem;
       justify-content: center;
+      margin: 1.5rem 0;
     }
 
-    select {
-      padding: 0.7rem;
+    select, .filter button {
+      padding: 0.75rem;
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 1rem;
     }
 
     .filter button {
-      padding: 0.7rem 1.5rem;
       background-color: #4a90e2;
       color: white;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
       font-weight: 600;
+      cursor: pointer;
     }
 
     .filter button:hover {
@@ -82,19 +94,19 @@
 
     .summary {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
       justify-content: space-between;
-      margin-bottom: 1rem;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
     }
 
     .summary div {
       flex: 1;
-      min-width: 150px;
       background: #e3f2fd;
-      padding: 1rem;
       border-radius: 10px;
+      padding: 1rem;
       text-align: center;
+      min-width: 150px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
@@ -108,94 +120,98 @@
 
     th, td {
       padding: 0.75rem;
-      text-align: left;
       border-bottom: 1px solid #ddd;
+      text-align: left;
     }
 
     th {
       background: #f0f4f8;
     }
 
-    @media (max-width: 600px) {
-      .navbar {
-        flex-direction: column;
-        align-items: flex-start;
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+        z-index: 10;
       }
 
-      .navbar .nav-links {
-        margin-top: 0.5rem;
+      .sidebar h2 {
+        margin-bottom: 1rem;
       }
 
-      .summary {
-        flex-direction: column;
+      .sidebar a {
+        display: inline-block;
+        margin: 0.3rem 1rem 0.3rem 0;
       }
 
-      .filter {
-        flex-direction: column;
-        align-items: stretch;
+      .main-content {
+        margin-left: 0;
+        padding-top: 140px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="brand">📊 Laporan Bulanan</div>
-    <div class="nav-links">
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="pemasukan.html">➕ Pemasukan</a>
-      <a href="pengeluaran.html">➖ Pengeluaran</a>
-      <!-- <a href="tagihan.html">🔔 Pengingat</a> -->
-    </div>
+  <div class="sidebar">
+    <h2>📊 Keuangan</h2>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="pemasukan.html">➕ Pemasukan</a>
+    <a href="pengeluaran.html">➖ Pengeluaran</a>
+    <a href="laporan.html">📈 Laporan</a>
   </div>
 
-  <div class="container">
-    <h2>Pilih Bulan & Tahun</h2>
-    <div class="filter">
-      <select id="bulanSelect">
-        <option value="0">Januari</option>
-        <option value="1">Februari</option>
-        <option value="2">Maret</option>
-        <option value="3">April</option>
-        <option value="4">Mei</option>
-        <option value="5">Juni</option>
-        <option value="6">Juli</option>
-        <option value="7">Agustus</option>
-        <option value="8">September</option>
-        <option value="9">Oktober</option>
-        <option value="10">November</option>
-        <option value="11">Desember</option>
-      </select>
-      <select id="tahunSelect"></select>
-      <button onclick="tampilkanLaporan()">🔍 Tampilkan</button>
-    </div>
+  <div class="main-content">
+    <div class="container">
+      <h2>Laporan Bulanan</h2>
+      <div class="filter">
+        <select id="bulanSelect">
+          <option value="0">Januari</option>
+          <option value="1">Februari</option>
+          <option value="2">Maret</option>
+          <option value="3">April</option>
+          <option value="4">Mei</option>
+          <option value="5">Juni</option>
+          <option value="6">Juli</option>
+          <option value="7">Agustus</option>
+          <option value="8">September</option>
+          <option value="9">Oktober</option>
+          <option value="10">November</option>
+          <option value="11">Desember</option>
+        </select>
+        <select id="tahunSelect"></select>
+        <button onclick="tampilkanLaporan()">🔍 Tampilkan</button>
+      </div>
 
-    <div class="summary">
-      <div>
-        <h4>Pemasukan</h4>
-        <strong id="totalMasuk">Rp 0</strong>
+      <div class="summary">
+        <div>
+          <h4>Pemasukan</h4>
+          <strong id="totalMasuk">Rp 0</strong>
+        </div>
+        <div>
+          <h4>Pengeluaran</h4>
+          <strong id="totalKeluar">Rp 0</strong>
+        </div>
+        <div>
+          <h4>Saldo</h4>
+          <strong id="totalSaldo">Rp 0</strong>
+        </div>
       </div>
-      <div>
-        <h4>Pengeluaran</h4>
-        <strong id="totalKeluar">Rp 0</strong>
-      </div>
-      <div>
-        <h4>Saldo</h4>
-        <strong id="totalSaldo">Rp 0</strong>
-      </div>
-    </div>
 
-    <table id="tabelLaporan">
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Jenis</th>
-          <th>Kategori</th>
-          <th>Jumlah</th>
-          <th>Keterangan</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+      <table id="tabelLaporan">
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Jenis</th>
+            <th>Kategori</th>
+            <th>Jumlah</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 
   <script>

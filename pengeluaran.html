@@ -7,41 +7,71 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #e3f2fd, #ffffff);
       color: #333;
+      display: flex;
+      min-height: 100vh;
     }
 
-    .navbar {
+    .sidebar {
+      width: 250px;
       background: #4a90e2;
       color: white;
-      padding: 1rem 2rem;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      flex-direction: column;
+      padding: 2rem 1rem;
+      position: fixed;
+      height: 100vh;
+      transition: transform 0.3s ease;
     }
 
-    .navbar .brand {
-      font-weight: 600;
+    .sidebar .brand {
       font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
     }
 
-    .navbar .nav-links a {
+    .sidebar a {
       color: white;
       text-decoration: none;
-      margin-left: 1.5rem;
-      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+
+    .sidebar a:hover {
+      color: #ffeb3b;
+    }
+
+    .content {
+      margin-left: 250px;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      font-size: 1.5rem;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      z-index: 1000;
     }
 
     .container {
       max-width: 800px;
-      margin: 2rem auto;
-      padding: 1.5rem;
+      margin: auto;
       background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(6px);
       border-radius: 12px;
+      padding: 2rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
@@ -65,7 +95,7 @@
 
     button {
       padding: 0.75rem 1.5rem;
-      background: #e74c3c;
+      background: #4a90e2;
       color: white;
       font-weight: bold;
       border: none;
@@ -76,7 +106,7 @@
     }
 
     button:hover {
-      background: #c0392b;
+      background: #357ABD;
     }
 
     table {
@@ -95,70 +125,88 @@
     }
 
     th {
-      background: #fdecea;
+      background: #eaf3fc;
     }
 
-    @media (max-width: 600px) {
-      .navbar {
-        flex-direction: column;
-        align-items: flex-start;
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
       }
 
-      .navbar .nav-links {
-        margin-top: 0.5rem;
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .content {
+        margin-left: 0;
+        padding-top: 5rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="brand">💰 Keuangan Keluarga</div>
-    <div class="nav-links">
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="pemasukan.html">➕ Pemasukan</a>
-      <a href="pengeluaran.html">➖ Pengeluaran</a>
-      <!-- <a href="login.html">🚪 Keluar</a> -->
-    </div>
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <div class="sidebar" id="sidebar">
+    <div class="brand">💰 Keuangan</div>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="pemasukan.html">➕ Pemasukan</a>
+    <a href="pengeluaran.html">➖ Pengeluaran</a>
+    <a href="laporan.html">📊 Laporan</a>
+    <a href="index.html">🚪 Keluar</a>
   </div>
 
-  <div class="container">
-    <h2>Tambah Pengeluaran</h2>
-    <div class="form-group">
-      <input type="text" id="deskripsi" placeholder="Deskripsi Pengeluaran (contoh: Belanja, Listrik)" />
-    </div>
-    <div class="form-group">
-      <input type="number" id="jumlah" placeholder="Jumlah (Rp)" />
-    </div>
-    <div class="form-group">
-      <input type="date" id="tanggal" />
-    </div>
-    <div class="form-group">
-      <select id="kategori">
-        <option value="">Pilih Kategori</option>
-        <option value="Makanan">Makanan</option>
-        <option value="Transportasi">Transportasi</option>
-        <option value="Listrik/Air">Listrik/Air</option>
-        <option value="Hiburan">Hiburan</option>
-        <option value="Kesehatan">Kesehatan</option>
-        <option value="Lainnya">Lainnya</option>
-      </select>
-    </div>
-    <button onclick="tambahPengeluaran()">Tambah</button>
+  <div class="content">
+    <div class="container">
+      <h2>Tambah Pengeluaran</h2>
+      <div class="form-group">
+        <input type="text" id="deskripsi" placeholder="Deskripsi Pengeluaran (contoh: Belanja, Listrik)" />
+      </div>
+      <div class="form-group">
+        <input type="number" id="jumlah" placeholder="Jumlah (Rp)" />
+      </div>
+      <div class="form-group">
+        <input type="date" id="tanggal" />
+      </div>
+      <div class="form-group">
+        <select id="kategori">
+          <option value="">Pilih Kategori</option>
+          <option value="Makanan">Makanan</option>
+          <option value="Transportasi">Transportasi</option>
+          <option value="Listrik/Air">Listrik/Air</option>
+          <option value="Hiburan">Hiburan</option>
+          <option value="Kesehatan">Kesehatan</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+      </div>
+      <button onclick="tambahPengeluaran()">Tambah</button>
 
-    <table id="tabelPengeluaran">
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Deskripsi</th>
-          <th>Kategori</th>
-          <th>Jumlah</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+      <table id="tabelPengeluaran">
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Deskripsi</th>
+            <th>Kategori</th>
+            <th>Jumlah</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 
   <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    function formatRupiah(angka) {
+      return "Rp " + parseInt(angka).toLocaleString("id-ID");
+    }
+
     function loadPengeluaran() {
       const data = JSON.parse(localStorage.getItem('pengeluaran')) || [];
       const tbody = document.querySelector('#tabelPengeluaran tbody');
@@ -169,7 +217,7 @@
           <td>${item.tanggal}</td>
           <td>${item.deskripsi}</td>
           <td>${item.kategori || 'Lainnya'}</td>
-          <td>Rp ${parseInt(item.jumlah).toLocaleString()}</td>
+          <td>${formatRupiah(item.jumlah)}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -197,7 +245,6 @@
 
       loadPengeluaran();
 
-      // Hitung saldo terbaru
       const pemasukan = JSON.parse(localStorage.getItem('pemasukan')) || [];
       const pengeluaran = JSON.parse(localStorage.getItem('pengeluaran')) || [];
 
@@ -209,10 +256,10 @@
 📤 *Pengeluaran Baru*
 Deskripsi : ${deskripsi}
 Kategori  : ${kategori}
-Jumlah    : Rp ${parseInt(jumlah).toLocaleString("id-ID")}
+Jumlah    : ${formatRupiah(jumlah)}
 Tanggal   : ${tanggal}
 
-💰 *Saldo Saat Ini*: Rp ${saldo.toLocaleString("id-ID")}
+💰 *Saldo Saat Ini*: ${formatRupiah(saldo)}
 
 📊 Dicatat di Aplikasi Keuangan Keluarga
       `.trim();

@@ -80,9 +80,10 @@ tbody tr:hover {
 </head>
 <body>
 
-  <div class="hamburger" onclick="toggleSidebar()">
+  <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
     <i class="fas fa-bars"></i>
   </div>
+  
 
   <div class="sidebar" id="sidebar">
     <h2><div class="close-btn" onclick="toggleSidebar()">
@@ -154,12 +155,20 @@ tbody tr:hover {
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-   function toggleSidebar() {
+  function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
-  const hamburger = document.querySelector(".menu-toggle");
+  const hamburger = document.getElementById("hamburger");
+
   sidebar.classList.toggle("active");
-  hamburger.classList.toggle("hidden"); // Tambahkan ini
+
+  // Sembunyikan hamburger saat sidebar aktif
+  if (sidebar.classList.contains("active")) {
+    hamburger.style.display = "none";
+  } else {
+    hamburger.style.display = "block";
+  }
 }
+
 
 
     function logout() {

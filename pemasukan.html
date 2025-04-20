@@ -5,50 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pemasukan</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #e3f2fd, #ffffff);
-      color: #333;
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 250px;
-      background: #4a90e2;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      padding: 2rem 1rem;
-      position: fixed;
-      height: 100vh;
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar .brand {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 2rem;
-    }
-
-    .sidebar a {
-      color: white;
-      text-decoration: none;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-      transition: color 0.2s;
-    }
-
-    .sidebar a:hover {
-      color: #ffeb3b;
-    }
-
-    .content {
-      margin-left: 250px;
-      padding: 2rem;
-      width: 100%;
+      background: linear-gradient(to bottom right, #f0f4ff, #ffffff);
+      overflow-x: hidden;
     }
 
     .hamburger {
@@ -57,12 +20,65 @@
       top: 1rem;
       left: 1rem;
       font-size: 1.5rem;
-      background: #4a90e2;
-      color: white;
+      background-color: white;
+      color: black;
       border: none;
-      padding: 0.5rem 0.8rem;
-      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      z-index: 1001;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #3b82f6;
+      color: white;
+      padding: 20px;
+      position: fixed;
+      height: 100%;
+      transition: transform 0.3s ease;
       z-index: 1000;
+    }
+
+    .sidebar h2 {
+      font-size: 24px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      color: white;
+    }
+    .sidebar h2 i {
+      margin-right: 10px;
+    }
+
+   
+    .sidebar a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      margin: 20px 0;
+      font-size: 16px;
+    }
+
+    .sidebar a i {
+      margin-right: 10px;
+    }
+
+    .sidebar a:hover {
+      color: #ffeb3b;
+    }
+
+    .sidebar .close-btn {
+      display: none;
+      font-size: 1.5rem;
+      text-align: right;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+    }
+
+    .content {
+      margin-left: 240px;
+      padding: 2rem;
+      box-sizing: border-box;
     }
 
     .container {
@@ -77,43 +93,41 @@
 
     h2 {
       text-align: center;
-      color: #2c3e50;
       margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
+      color: #2c3e50;
     }
 
     input, select {
       width: 100%;
       padding: 0.75rem;
+      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
     }
 
     button {
-      padding: 0.75rem 1.5rem;
-      background: #4a90e2;
+      background-color: #4a90e2;
       color: white;
-      font-weight: bold;
       border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: bold;
+      font-size: 1rem;
       border-radius: 8px;
       cursor: pointer;
-      display: block;
       margin: 1rem auto;
+      display: block;
     }
 
     button:hover {
-      background: #357ABD;
+      background-color: #357ABD;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 2rem;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255,255,255,0.9);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -128,7 +142,20 @@
       background: #e3f2fd;
     }
 
+    tbody tr {
+      animation: fadeIn 0.4s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+
       .sidebar {
         transform: translateX(-100%);
       }
@@ -137,7 +164,7 @@
         transform: translateX(0);
       }
 
-      .hamburger {
+      .sidebar .close-btn {
         display: block;
       }
 
@@ -149,37 +176,35 @@
   </style>
 </head>
 <body>
-  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Buka menu navigasi">☰</button>
+
   <div class="sidebar" id="sidebar">
-    <div class="brand">💰 Keuangan</div>
-    <a href="dashboard.html">🏠 Dashboard</a>
-    <a href="pemasukan.html">➕ Pemasukan</a>
-    <a href="pengeluaran.html">➖ Pengeluaran</a>
-    <a href="laporan.html">📊 Laporan</a>
-    <a href="index.html">🚪 Keluar</a>
+    <div class="close-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></div>
+    <h2><i class="fas fa-chart-bar"></i> Keuangan</h2>
+    <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="pemasukan.html"><i class="fas fa-plus"></i> Pemasukan</a>
+    <a href="pengeluaran.html"><i class="fas fa-minus"></i> Pengeluaran</a>
+    <a href="laporan.html"><i class="fas fa-chart-pie"></i> Laporan</a>
+    <a href="#" onclick="logout()"><i class="fas fa-door-open"></i> Keluar</a>
+  </div>
+
+  <div class="menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
   </div>
 
   <div class="content">
     <div class="container">
       <h2>Tambah Pemasukan</h2>
-      <div class="form-group">
-        <input type="text" id="deskripsi" placeholder="Deskripsi (contoh: Gaji, Bonus)" />
-      </div>
-      <div class="form-group">
-        <input type="number" id="jumlah" placeholder="Jumlah (Rp)" />
-      </div>
-      <div class="form-group">
-        <input type="date" id="tanggal" />
-      </div>
-      <div class="form-group">
-        <select id="kategori">
-          <option value="">Pilih Kategori</option>
-          <option value="Gaji">Gaji</option>
-          <option value="Bonus">Bonus</option>
-          <option value="Penjualan">Penjualan</option>
-          <option value="Lainnya">Lainnya</option>
-        </select>
-      </div>
+      <input type="text" id="deskripsi" placeholder="Deskripsi (contoh: Gaji, Bonus)" />
+      <input type="number" id="jumlah" placeholder="Jumlah (Rp)" min="1" />
+      <input type="date" id="tanggal" />
+      <select id="kategori">
+        <option value="">Pilih Kategori</option>
+        <option value="Gaji">Gaji</option>
+        <option value="Bonus">Bonus</option>
+        <option value="Penjualan">Penjualan</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
       <button onclick="tambahPemasukan()">Tambah</button>
 
       <table id="tabelPemasukan">
@@ -198,7 +223,9 @@
 
   <script>
     function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("active");
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("active");
+      document.body.style.overflow = sidebar.classList.contains("active") ? 'hidden' : '';
     }
 
     function formatRupiah(angka) {
@@ -258,6 +285,11 @@
       document.getElementById('kategori').value = '';
 
       loadPemasukan();
+    }
+
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      window.location.href = "index.html";
     }
 
     loadPemasukan();

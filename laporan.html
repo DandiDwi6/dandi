@@ -58,6 +58,20 @@
 tbody tr:hover {
   background-color: #f0f9ff;
 }
+.close-btn {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .close-btn {
+    display: block;
+  }
+}
 
   </style>
 </head>
@@ -68,7 +82,9 @@ tbody tr:hover {
   </div>
 
   <div class="sidebar" id="sidebar">
-    <h2><i class="fas fa-chart-bar"></i> Keuangan</h2>
+    <h2><div class="close-btn" onclick="toggleSidebar()">
+      <i class="fas fa-times"></i>
+    </div><i class="fas fa-chart-bar"></i> Keuangan</h2>
     <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
     <a href="pemasukan.html"><i class="fas fa-plus"></i> Pemasukan</a>
     <a href="pengeluaran.html"><i class="fas fa-minus"></i> Pengeluaran</a>
